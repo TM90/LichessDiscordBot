@@ -1,0 +1,7 @@
+discord.py
+python-dotenv
+wget
+berserk
+pandas
+matplotlib
+openpyxl
