@@ -63,6 +63,7 @@ async def get_pgn(ctx, user: str, perf_type: str, *args):
     except urllib.error.HTTPError:
         await ctx.send("Sorry something went wrong maybe a typo? 404 not found!")
 
+
 help_str = """
 Gets rating history from lichess as excel
 
@@ -118,5 +119,30 @@ async def get_rating_hist(ctx, user: str, perf_type: str):
     await ctx.send(file=File(out_file_name))
     os.remove(out_file_name)
     plt.clf()
+
+
+@bot.command(name='get_game_modes', help="List all game modes")
+async def get_game_modes(ctx):
+    output = """
+    ```
+    "bullet"
+    "blitz"
+    "rapid"
+    "classical"
+    "correspondance"
+    "chess960"
+    "king_of_the_hill"
+    "three_check"
+    "antichess"
+    "atomic"
+    "horde"
+    "racing_kings"
+    "crazy_house"
+    "puzzles
+    "ultrabullet"
+    ```
+    """
+    await ctx.send(output)
+
 
 bot.run(discord_token)
