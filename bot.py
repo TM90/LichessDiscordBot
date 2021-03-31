@@ -15,10 +15,10 @@ from dotenv import load_dotenv
 load_dotenv()
 discord_token = os.getenv('DISCORD_TOKEN')
 lichess_token = os.getenv('LICHESS_TOKEN')
-bot = commands.Bot(command_prefix = '!')
+bot = commands.Bot(command_prefix='!')
 
 session = berserk.TokenSession(lichess_token)
-client = berserk.Client(session = session)
+client = berserk.Client(session=session)
 
 help_str = """
 Gets pgn from lichess
@@ -37,7 +37,7 @@ Examples:
 """
 
 
-@bot.command(name = 'get_pgn', help = help_str)
+@bot.command(name='get_pgn', help=help_str)
 async def get_pgn(ctx, user: str, perf_type: str, *args):
     download_str = f"https://lichess.org/games/export/{user}?perfType={perf_type}"
     out_file_name = f"{user}_{perf_type}"
@@ -57,8 +57,8 @@ async def get_pgn(ctx, user: str, perf_type: str, *args):
     out_file_name += ".pgn"
 
     try:
-        wget.download(download_str, out = out_file_name)
-        await ctx.send(file = File(out_file_name))
+        wget.download(download_str, out=out_file_name)
+        await ctx.send(file=File(out_file_name))
         os.remove(out_file_name)
     except urllib.error.HTTPError:
         await ctx.send("Sorry something went wrong maybe a typo? 404 not found!")
@@ -73,7 +73,7 @@ Example:
 """
 
 
-@bot.command(name = 'get_rating_hist', help = help_str)
+@bot.command(name='get_rating_hist', help=help_str)
 async def get_rating_hist(ctx, user: str, perf_type: str):
     perf_dict = {
         "bullet": 0,
@@ -93,7 +93,7 @@ async def get_rating_hist(ctx, user: str, perf_type: str):
         "ultrabullet": 14
     }
     # Get the rating History
-    rating_hist = json.loads(client.users.get_rating_history(username = user))
+    rating_hist = json.loads(client.users.get_rating_history(username=user))
     # build a rating list with a time string: Tuple[str, int]
     rating_list = [(f"{rating[0]}-{rating[1] + 1}-{rating[2]}", rating[3]) for rating in
                    rating_hist[perf_dict[perf_type]]['points']]
@@ -104,24 +104,24 @@ async def get_rating_hist(ctx, user: str, perf_type: str):
     timestamps = pd.to_datetime(x)
 
     # create a pandas data series resample it with a daily interval and interpolate the data in a linear fashion
-    ts = pd.Series(y, index = timestamps)
+    ts = pd.Series(y, index=timestamps)
     ts = ts.resample('D').mean()
-    ts = ts.interpolate(method = 'time')
+    ts = ts.interpolate(method='time')
     # plot the data
-    ts.plot(linestyle = 'dashed', linewidth = 1)
+    ts.plot(linestyle='dashed', linewidth=1)
     plt.title(f"{user}'s {perf_type} ratings")
     out_file_name = f"{user}_{perf_type}.png"
     plt.savefig(out_file_name)
-    await ctx.send(file = File(out_file_name))
+    await ctx.send(file=File(out_file_name))
     os.remove(out_file_name)
     out_file_name = f"{user}_{perf_type}.xlsx"
     ts.to_excel(out_file_name)
-    await ctx.send(file = File(out_file_name))
+    await ctx.send(file=File(out_file_name))
     os.remove(out_file_name)
     plt.clf()
 
 
-@bot.command(name = 'get_game_modes', help = "List all game modes")
+@bot.command(name='get_game_modes', help="List all game modes")
 async def get_game_modes(ctx):
     output = """
         "bullet" ,
