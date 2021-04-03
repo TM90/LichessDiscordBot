@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from discord import File
 from discord.ext import commands
 from dotenv import load_dotenv
+from urllib3.exceptions import ResponseError
 
 load_dotenv()
 discord_token = os.getenv('DISCORD_TOKEN')
@@ -144,5 +145,21 @@ async def get_game_modes(ctx):
     """
     await ctx.send(output)
 
+help_str = """
+Creates a lichess tournament and returns the corresponding link
+
+Example:
+# creates a tournament with 10 minutes and 5sec clock_increment with a tournament which lasts 10 minutes
+# and starts at the 01.01.2021
+!create_tournament MyFirstTournament 10 5 90 "01.01.2021 12:00"
+"""
+@bot.command(name='create_tournament', help=help_str)
+async def create_tournament(ctx, name: str, clock: int, clock_increment: int, duration: int, start_date: str):
+    date_unix = int(datetime.strptime(start_date, '%d.%m.%Y %H:%M').timestamp() * 1000)
+    try:
+        tournament = client.tournaments.create(clock, clock_increment, duration, name=name, start_date=date_unix)
+        await ctx.send(f"https://lichess.org/tournament/{tournament['id']}")
+    except berserk.exceptions.ResponseError as e:
+        await ctx.send(e)
 
 bot.run(discord_token)
