@@ -98,7 +98,7 @@ async def get_rating_hist(ctx, user: str, perf_type: str):
         "ultrabullet": 14
     }
     # Get the rating History
-    rating_hist = json.loads(client.users.get_rating_history(username=user))
+    rating_hist = client.users.get_rating_history(username=user)
     # build a rating list with a time string: Tuple[str, int]
     rating_list = [(f"{rating[0]}-{rating[1] + 1}-{rating[2]}", rating[3]) for rating in
                    rating_hist[perf_dict[perf_type]]['points']]
