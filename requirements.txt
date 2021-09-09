@@ -5,3 +5,5 @@ berserk
 pandas
 matplotlib
 openpyxl
+chess
+cairosvg
